@@ -1,10 +1,11 @@
 {
   "name": "@omkar273/mcp-temp",
-  "version": "0.0.1",
-  "author": "Speakeasy",
+  "version": "0.0.31",
+  "author": "flexprice",
   "type": "module",
   "sideEffects": false,
   "bin": {
+    "@omkar273/mcp-temp": "bin/mcp-server.js",
     "mcp": "bin/mcp-server.js"
   },
   "scripts": {

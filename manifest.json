@@ -1,35 +1,36 @@
 {
-  "manifest_version": "0.3",
-  "name": "mcp",
-  "version": "0.0.1",
-  "description": "",
-  "long_description": "Flexprice API: Flexprice API provides billing, metering, and subscription management for SaaS and usage-based products. Use it to manage customers, plans, invoices, payments, usage events, and entitlements. Authenticate with an API key in the x-api-key header.",
   "author": {
-    "name": "Speakeasy"
+    "name": "flexprice"
   },
-  "server": {
-    "type": "node",
-    "entry_point": "./bin/mcp-server.js",
-    "mcp_config": {
-      "command": "node",
-      "args": [
-        "${__dirname}/bin/mcp-server.js",
-        "start",
-        "--server-url",
-        "${user_config.server_url}",
-        "--api-key-auth",
-        "${user_config.api_key_auth}"
-      ]
-    }
-  },
-  "display_name": "Mcp",
-  "prompts": [],
+  "description": "",
+  "displayName": "Flexprice",
+  "display_name": "@omkar273/mcp Temp",
   "keywords": [
-      "mcp",
-      "flexprice",
-      "api",
-      "provides"
-    ],
+    "@omkar273/mcp",
+    "temp",
+    "flexprice",
+    "api",
+    "provides"
+  ],
+  "long_description": "Flexprice API: Flexprice API provides billing, metering, and subscription management for SaaS and usage-based products. Use it to manage customers, plans, invoices, payments, usage events, and entitlements. Authenticate with an API key in the x-api-key header.",
+  "manifest_version": "0.3",
+  "name": "@omkar273/mcp-temp",
+  "prompts": [],
+  "server": {
+      "type": "node",
+      "entry_point": "./bin/mcp-server.js",
+      "mcp_config": {
+        "command": "node",
+        "args": [
+          "${__dirname}/bin/mcp-server.js",
+          "start",
+          "--server-url",
+          "${user_config.server_url}",
+          "--api-key-auth",
+          "${user_config.api_key_auth}"
+        ]
+      }
+    },
   "user_config": {
       "server_url": {
         "type": "string",
@@ -44,5 +45,6 @@
         "required": true,
         "sensitive": true
       }
-    }
+    },
+  "version": "0.0.31"
 }

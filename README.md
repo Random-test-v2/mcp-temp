@@ -1,327 +1,258 @@
-# mcp
+# FlexPrice MCP Server
 
-Model Context Protocol (MCP) Server for the *mcp* API.
+A Model Context Protocol (MCP) server that exposes the FlexPrice API as tools for AI assistants (e.g. Claude, Cursor, VS Code, Windsurf). Use it to manage customers, plans, prices, subscriptions, invoices, payments, events, and more from your IDE or CLI.
 
-[![Built by Speakeasy](https://img.shields.io/badge/Built_by-SPEAKEASY-374151?style=for-the-badge&labelColor=f3f4f6)](https://www.speakeasy.com/?utm_source=mcp&utm_campaign=mcp-typescript)
-[![License: MIT](https://img.shields.io/badge/LICENSE_//_MIT-3b5bdb?style=for-the-badge&labelColor=eff6ff)](https://opensource.org/licenses/MIT)
+## Prerequisites
 
+- **Node.js** v20 or higher
+- **npm** or **yarn**
+- **FlexPrice API key** from your [FlexPrice account](https://app.flexprice.io)
 
-<br /><br />
-> [!IMPORTANT]
-> This MCP Server is not yet ready for production use. To complete setup please follow the steps outlined in your [workspace](https://app.speakeasy.com/org/flexprice/prod). Delete this notice before publishing to a package manager.
+## How to use the FlexPrice MCP server
 
-<!-- Start Summary [summary] -->
-## Summary
+You can run the server in two ways: **npm package** (one command) or **local repo** (clone and run). Pick one, then [add it to your MCP client](#add-to-your-mcp-client).
 
-Flexprice API: Flexprice API provides billing, metering, and subscription management for SaaS and usage-based products. Use it to manage customers, plans, invoices, payments, usage events, and entitlements. Authenticate with an API key in the x-api-key header.
-<!-- End Summary [summary] -->
+---
 
-<!-- Start Table of Contents [toc] -->
-## Table of Contents
-<!-- $toc-max-depth=2 -->
-* [mcp](#mcp)
-  * [Installation](#installation)
-  * [Progressive Discovery](#progressive-discovery)
-  * [Development](#development)
-  * [Publishing to Anthropic MCP Registry](#publishing-to-anthropic-mcp-registry)
-  * [Contributions](#contributions)
+### Option 1: npm package
 
-<!-- End Table of Contents [toc] -->
+Install: `npm i @omkar273/mcp-temp`. Or run with one command (no clone or build):
 
-<!-- Start Installation [installation] -->
-## Installation
+```bash
+npx @omkar273/mcp-temp start --server-url https://api.cloud.flexprice.io/v1 --api-key-auth YOUR_API_KEY
+```
 
-<details>
-<summary>Claude Desktop</summary>
+Replace `YOUR_API_KEY` with your FlexPrice API key. Next: [Add to your MCP client](#add-to-your-mcp-client).
 
-Install the MCP server as a Desktop Extension using the pre-built [`mcp-server.mcpb`](./mcp-server.mcpb) file:
+---
 
-Simply drag and drop the [`mcp-server.mcpb`](./mcp-server.mcpb) file onto Claude Desktop to install the extension.
+### Option 2: Local repo
 
-The MCP bundle package includes the MCP server and all necessary configuration. Once installed, the server will be available without additional setup.
+Use this if you want to change code or run without npm:
 
-> [!NOTE]
-> MCP bundles provide a streamlined way to package and distribute MCP servers. Learn more about [Desktop Extensions](https://www.anthropic.com/engineering/desktop-extensions).
+1. Clone the repository and go to the MCP server directory (e.g. `api/mcp` or the repo that contains it).
+2. Install dependencies: `npm install`
+3. Create a `.env` file (from `.env.example` if present) with:
+   - `BASE_URL=https://api.cloud.flexprice.io/v1` (must include `/v1`, no trailing slash)
+   - `API_KEY_APIKEYAUTH=your_api_key_here`
+4. Build: `npm run build`
+5. Start: `npm start`
 
-</details>
+**Docker (stdio):** You can also build and run with stdio:
 
-<details>
-<summary>Cursor</summary>
+```bash
+docker build -t flexprice-mcp .
+docker run -i -e API_KEY_APIKEYAUTH=your_api_key_here -e BASE_URL=https://api.cloud.flexprice.io/v1 flexprice-mcp node bin/mcp-server.js start
+```
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=SDK&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJtY3AiLCJzdGFydCIsIi0tc2VydmVyLXVybCIsIiIsIi0tYXBpLWtleS1hdXRoIiwiIl19)
+Next: [Add to your MCP client](#add-to-your-mcp-client) and use the **Node from repo** or **Docker** config below.
 
-Or manually:
+## Add to your MCP client
 
-1. Open Cursor Settings
-2. Select Tools and Integrations
-3. Select New MCP Server
-4. If the configuration file is empty paste the following JSON into the MCP Server Configuration:
+Add the FlexPrice MCP server in your editor. Replace `YOUR_API_KEY` with your FlexPrice API key in all examples.
+
+### Config file locations
+
+| Host                       | Config location |
+| -------------------------- | --------------- |
+| **Cursor**                 | Cursor → Settings → MCP (or Cmd+Shift+P → "Cursor Settings" → MCP) |
+| **VS Code**                | Command Palette → **MCP: Open User Configuration** (opens `mcp.json`) |
+| **Claude Desktop (macOS)** | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| **Claude Desktop (Windows)** | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+---
+
+### Cursor
+
+1. Open **Cursor → Settings → Cursor Settings** and go to the **MCP** tab.
+2. Add a new MCP server and use this config (Option 1 — npx):
 
 ```json
 {
-  "command": "npx",
-  "args": [
-    "mcp",
-    "start",
-    "--server-url",
-    "",
-    "--api-key-auth",
-    ""
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>Claude Code CLI</summary>
-
-```bash
-claude mcp add SDK -- npx -y mcp start --server-url  --api-key-auth 
-```
-
-</details>
-<details>
-<summary>Gemini</summary>
-
-```bash
-gemini mcp add SDK -- npx -y mcp start --server-url  --api-key-auth 
-```
-
-</details>
-<details>
-<summary>Windsurf</summary>
-
-Refer to [Official Windsurf documentation](https://docs.windsurf.com/windsurf/cascade/mcp#adding-a-new-mcp-plugin) for latest information
-
-1. Open Windsurf Settings
-2. Select Cascade on left side menu
-3. Click on `Manage MCPs`. (To Manage MCPs you should be signed in with a Windsurf Account)
-4. Click on `View raw config` to open up the mcp configuration file.
-5. If the configuration file is empty paste the full json
-
-```bash
-{
-  "command": "npx",
-  "args": [
-    "mcp",
-    "start",
-    "--server-url",
-    "",
-    "--api-key-auth",
-    ""
-  ]
-}
-```
-</details>
-<details>
-<summary>VS Code</summary>
-
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20SDK%20MCP&color=0098FF)](vscode://ms-vscode.vscode-mcp/install?name=SDK&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJtY3AiLCJzdGFydCIsIi0tc2VydmVyLXVybCIsIiIsIi0tYXBpLWtleS1hdXRoIiwiIl19)
-
-Or manually:
-
-Refer to [Official VS Code documentation](https://code.visualstudio.com/api/extension-guides/ai/mcp) for latest information
-
-1. Open [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette)
-1. Search and open `MCP: Open User Configuration`. This should open mcp.json file
-2. If the configuration file is empty paste the full json
-
-```bash
-{
-  "command": "npx",
-  "args": [
-    "mcp",
-    "start",
-    "--server-url",
-    "",
-    "--api-key-auth",
-    ""
-  ]
-}
-```
-
-</details>
-<details>
-<summary> Stdio installation via npm </summary>
-To start the MCP server, run:
-
-```bash
-npx mcp start --server-url  --api-key-auth 
-```
-
-For a full list of server arguments, run:
-
-```
-npx mcp --help
-```
-
-</details>
-<!-- End Installation [installation] -->
-
-<!-- Start Progressive Discovery [dynamic-mode] -->
-## Progressive Discovery
-
-MCP servers with many tools can bloat LLM context windows, leading to increased token usage and tool confusion. Dynamic mode solves this by exposing only a small set of meta-tools that let agents progressively discover and invoke tools on demand.
-
-To enable dynamic mode, pass the `--mode dynamic` flag when starting your server:
-
-```jsonc
-{
   "mcpServers": {
-    "SDK": {
+    "flexprice": {
       "command": "npx",
-      "args": ["mcp", "start", "--mode", "dynamic"],
-      // ... other server arguments
+      "args": [
+        "-y",
+        "@omkar273/mcp-temp",
+        "start",
+        "--server-url",
+        "https://api.cloud.flexprice.io/v1",
+        "--api-key-auth",
+        "YOUR_API_KEY"
+      ]
     }
   }
 }
 ```
 
-In dynamic mode, the server registers only the following meta-tools instead of every individual tool:
+---
 
-- **`list_tools`**: Lists all available tools with their names and descriptions.
-- **`describe_tool`**: Returns the input schema for one or more tools by name.
-- **`execute_tool`**: Executes a tool by name with the provided input parameters.
+### VS Code
 
-This approach significantly reduces the number of tokens sent to the LLM on each request, which is especially useful for servers with a large number of tools.
-<!-- End Progressive Discovery [dynamic-mode] -->
-
-<!-- Placeholder for Future Speakeasy SDK Sections -->
-
-## Development
-
-Run locally without a published npm package:
-1. Clone this repository
-2. Run `npm install`
-3. Run `npm run build`
-4. Run `node ./bin/mcp-server.js start --server-url  --api-key-auth `
-To use this local version with Cursor, Claude or other MCP Clients, you'll need to add the following config:
+1. Open Command Palette (**Ctrl+Shift+P** / **Cmd+Shift+P**) and run **MCP: Open User Configuration** or **MCP: Add Server**.
+2. Add:
 
 ```json
 {
-  "command": "node",
-  "args": [
-    "./bin/mcp-server.js",
-    "start",
-    "--server-url",
-    "",
-    "--api-key-auth",
-    ""
-  ]
+  "servers": {
+    "flexprice": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@omkar273/mcp-temp",
+        "start",
+        "--server-url",
+        "https://api.cloud.flexprice.io/v1",
+        "--api-key-auth",
+        "YOUR_API_KEY"
+      ]
+    }
+  }
 }
 ```
 
-Or to debug the MCP server locally, use the official MCP Inspector: 
+---
+
+### Claude Code
 
 ```bash
-npx @modelcontextprotocol/inspector node ./bin/mcp-server.js start --server-url  --api-key-auth 
+claude mcp add FlexPrice -- npx -y @omkar273/mcp-temp start --server-url https://api.cloud.flexprice.io/v1 --api-key-auth YOUR_API_KEY
 ```
 
+Then run `claude` and use `/mcp` to confirm the server is connected.
 
+---
 
-## Publishing to Anthropic MCP Registry
+### Claude Desktop
 
-To publish your MCP server to the [Anthropic MCP Registry](https://github.com/modelcontextprotocol/registry), follow these steps based on the [official publishing guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/guides/publishing/publish-server.md).
+Add to your Claude Desktop config file (path in the table above):
 
-### Step 1: Configure mcpName in Your Generation Config
-
-Add the `mcpName` field to your `.speakeasy/gen.yaml` file:
-
-```yaml
-mcp-typescript:
-  mcpName: io.github.username/server-name  # Use reverse-DNS format
-  # ... other configuration
+```json
+{
+  "mcpServers": {
+    "flexprice": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@omkar273/mcp-temp",
+        "start",
+        "--server-url",
+        "https://api.cloud.flexprice.io/v1",
+        "--api-key-auth",
+        "YOUR_API_KEY"
+      ]
+    }
+  }
+}
 ```
 
-The `mcpName` should follow the reverse-DNS format (e.g., `io.github.username/server-name`) to ensure uniqueness in the registry.
+Quit and reopen Claude Desktop.
 
-### Step 2: Regenerate Your MCP Server
+---
 
-Run Speakeasy generation with the updated configuration. This will:
-- Add the `mcpName` field to your `package.json` (required for npm package validation)
-- Generate a `server.json` file with registry metadata
+### Alternative configs
 
-### Step 3: Publish to npm
+**Node from repo** (Option 2 — run from cloned repo):
 
-The registry validates npm packages by checking that your published package includes the `mcpName` field:
+```json
+{
+  "mcpServers": {
+    "flexprice": {
+      "command": "node",
+      "args": ["/path/to/mcp-server/bin/mcp-server.js", "start"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "your_api_key_here",
+        "BASE_URL": "https://api.cloud.flexprice.io/v1"
+      }
+    }
+  }
+}
+```
+
+**Docker** (Option 2 — stdio):
+
+```json
+{
+  "mcpServers": {
+    "flexprice": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "API_KEY_APIKEYAUTH", "-e", "BASE_URL", "flexprice-mcp"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "your_api_key_here",
+        "BASE_URL": "https://api.cloud.flexprice.io/v1"
+      }
+    }
+  }
+}
+```
+
+After editing, save and **restart Cursor or quit and reopen Claude Desktop** so the MCP server is loaded.
+
+## Tools
+
+The server exposes FlexPrice API operations as MCP tools. Tool names and parameters follow the OpenAPI spec. For the full list, see your MCP client’s tool list after connecting, or the OpenAPI spec (e.g. `docs/swagger/swagger-3-0.json`) in the repo.
+
+## Progressive discovery (dynamic mode)
+
+Servers with many tools can bloat context and token usage. **Dynamic mode** exposes a small set of meta-tools so the assistant can discover and call operations on demand:
+
+- **`list_tools`** – List available tools with names and descriptions  
+- **`describe_tool`** – Get the input schema for one or more tools  
+- **`execute_tool`** – Run a tool by name with given parameters  
+
+To enable dynamic mode, add `--mode dynamic` when starting the server:
+
+```json
+"args": ["-y", "@omkar273/mcp-temp", "start", "--server-url", "https://api.cloud.flexprice.io/v1", "--api-key-auth", "YOUR_API_KEY", "--mode", "dynamic"]
+```
+
+This reduces tokens per request and can improve tool choice when there are many operations.
+
+## Scopes
+
+If the server is configured with scopes (e.g. `read`, `write`), you can limit tools by scope:
 
 ```bash
-npm publish
+npx @omkar273/mcp-temp start --server-url https://api.cloud.flexprice.io/v1 --api-key-auth YOUR_API_KEY --scope read
 ```
 
-The registry will fetch your package from npm and verify that the `mcpName` in `package.json` matches your server name.
+Use `read` for read-only access when the server defines a `read` scope.
 
-### Step 4: Install the Publisher CLI
+## Troubleshooting
 
-Install the `mcp-publisher` CLI tool:
+### "Invalid URL" or request errors
 
-**macOS/Linux (Homebrew)**:
-```bash
-brew install mcp-publisher
-```
+- The server builds request URLs from `BASE_URL` + path. If `BASE_URL` is unset or wrong, requests fail.
+- **Fix:** Set `BASE_URL=https://api.cloud.flexprice.io/v1` (no trailing slash after `v1`). For npx, pass `--server-url https://api.cloud.flexprice.io/v1`.
+- If you get **404** on tool calls, ensure the base URL includes `/v1`.
 
-**macOS/Linux/WSL (curl)**:
-```bash
-curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher && sudo mv mcp-publisher /usr/local/bin/
-```
+### API connection issues
 
-**Windows PowerShell**:
-```powershell
-$arch = if ([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture -eq "Arm64") { "arm64" } else { "amd64" }
-Invoke-WebRequest -Uri "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_windows_$arch.tar.gz" -OutFile "mcp-publisher.tar.gz"
-tar xf mcp-publisher.tar.gz mcp-publisher.exe
-rm mcp-publisher.tar.gz
-# Move mcp-publisher.exe to a directory in your PATH
-```
+1. **Credentials:** Check that your API key and base URL are correct. Test the key with the FlexPrice API (e.g. `curl -H "x-api-key: your_key" https://api.cloud.flexprice.io/v1/customers`).
+2. **Network:** Confirm the host can reach the FlexPrice API (firewall, proxy).
+3. **Rate limiting:** If you see rate-limit errors, reduce request frequency or contact FlexPrice support.
 
-### Step 5: Authenticate
+### Server issues
 
-Authenticate based on your namespace:
+- **Port in use:** If something else uses the port (e.g. 3000), change the server config or stop the other process.
+- **Missing dependencies:** Run `npm install` and `npm run build` in the server directory.
+- **Permissions:** Ensure the entrypoint is executable (e.g. `chmod +x bin/mcp-server.js`).
 
-**For `io.github.*` namespaces (GitHub OAuth)**:
-```bash
-mcp-publisher login github
-```
+### Docker
 
-**For custom domains like `com.yourcompany.*` (DNS authentication)**:
-```bash
-# Generate keypair
-openssl genpkey -algorithm Ed25519 -out key.pem
+- **Build failures:** Check Docker is installed and the daemon is running; try `docker build --no-cache`.
+- **Container exits:** Inspect logs with `docker logs <container_id>`.
+- **Env vars:** Verify env is passed: `docker run -it --rm flexprice-mcp printenv`.
 
-# Get public key for DNS record
-echo "yourcompany.com. IN TXT \"v=MCPv1; k=ed25519; p=$(openssl pkey -in key.pem -pubout -outform DER | tail -c 32 | base64)\""
+## Generating the MCP server
 
-# Add the TXT record to your DNS, then login
-mcp-publisher login dns --domain yourcompany.com --private-key $(openssl pkey -in key.pem -noout -text | grep -A3 "priv:" | tail -n +2 | tr -d ' :\n')
-```
+The server is generated with **Speakeasy** from the OpenAPI spec (e.g. `docs/swagger/swagger-3-0.json`). To regenerate after API or overlay changes:
 
-### Step 6: Publish to the Registry
+1. Install the [Speakeasy CLI](https://www.speakeasy.com/).
+2. From the repo root, run the generation target for the MCP server (e.g. `make sdk-all` or the Speakeasy workflow that outputs to `api/mcp`).
+3. Run `make merge-custom` so custom files (including this README) are merged into the output.
+4. Build and run: `npm run build` and `npm start` from the MCP output directory.
 
-From your server directory, publish to the registry:
-
-```bash
-mcp-publisher publish
-```
-
-You'll see:
-```
-✓ Successfully published
-```
-
-### Step 7: Verify Publication
-
-Check that your server appears in the registry:
-
-```bash
-curl "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.username/server-name"
-```
-
-For complete documentation including remote deployments, troubleshooting, and CI/CD automation, see the [official publishing guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/guides/publishing/publish-server.md).
-
-## Contributions
-
-While we value contributions to this MCP Server, the code is generated programmatically. Any manual changes added to internal files will be overwritten on the next generation. 
-We look forward to hearing your feedback. Feel free to open a PR or an issue with a proof of concept and we'll do our best to include it in a future release. 
-
-### MCP Server Created by [Speakeasy](https://www.speakeasy.com/?utm_source=mcp&utm_campaign=mcp-typescript)
+See the main repo README and [AGENTS.md](AGENTS.md) for SDK/MCP generation and publishing.

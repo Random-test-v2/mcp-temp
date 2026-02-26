@@ -3,7 +3,7 @@
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SDKCore } from "../core.js";
+import { FlexpriceCore } from "../core.js";
 import { SDKOptions } from "../lib/config.js";
 import type { ConsoleLogger } from "./console-logger.js";
 import { createRegisterPrompt } from "./prompts.js";
@@ -207,18 +207,18 @@ export function createMCPServer(deps: {
   allowedTools?: string[] | undefined;
   dynamic?: boolean | undefined;
   scopes?: MCPScope[] | undefined;
-  getSDK?: () => SDKCore;
+  getSDK?: () => FlexpriceCore;
   serverURL: string;
   security?: SDKOptions["security"] | undefined;
   serverIdx?: SDKOptions["serverIdx"] | undefined;
 }) {
   const server = new McpServer({
-    name: "SDK",
-    version: "0.0.1",
+    name: "Flexprice",
+    version: "0.0.31",
   });
 
   const getClient = deps.getSDK || (() =>
-    new SDKCore({
+    new FlexpriceCore({
       security: deps.security,
       serverURL: deps.serverURL,
       serverIdx: deps.serverIdx,
